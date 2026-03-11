@@ -47,34 +47,18 @@ class LinkService(BaseService):
     async def get_original_url_and_increment_clicks(self, short_id: str) -> str:
         """
         Получение оригинальной ссылки и увеличение счетчика переходов
-
         """
-        # Проверяем существование и получаем ссылку
         link = await self._get_link_or_fail(short_id)
 
         # Атомарно увеличиваем счетчик
         updated_link = await self.link_repo.increment_clicks(short_id)
 
-        # Возвращаем оригинальный URL
         return updated_link.original_url
 
     async def get_clicks_count(self, short_id: str) -> int:
         """
         Получение количества переходов по ссылке
-
-        Args:
-            short_id: короткий идентификатор
-
-        Returns:
-            int: количество переходов
-
-        Raises:
-            LinkNotFoundError: если ссылка не найдена
-
-        Note:
-            Соответствует пункту 4 ТЗ: эндпоинт GET /stats/{short_id}
         """
-        # Пытаемся получить количество кликов
         clicks = await self.link_repo.get_clicks_count(short_id)
 
         if clicks is None:
@@ -85,21 +69,12 @@ class LinkService(BaseService):
     async def _generate_unique_short_id(self) -> str:
         """
         Генерация уникального короткого идентификатора
-
-        Returns:
-            str: уникальный short_id
-
-        Note:
-            Проверяет уникальность в БД и генерирует новый при коллизии
         """
         while True:
-            # Генерируем новый ID
             short_id = self.id_generator.generate()
 
-            # Проверяем, не занят ли он
             existing = await self.link_repo.get_by_short_id(short_id)
 
             if not existing:
                 return short_id
 
-            # Если занят - генерируем снова (вероятность крайне мала)

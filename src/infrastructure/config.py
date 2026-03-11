@@ -1,19 +1,28 @@
-from pydantic import BaseModel
-import os
+from pydantic import BaseSettings
 
 
-class Settings(BaseModel):
-    """Конфигурация приложения"""
+class Settings(BaseSettings):
+    """Настройки приложения"""
 
-    app_name: str = "url-shortener"
-    log_level: str = os.getenv("LOG_LEVEL", "INFO")
-    database_url: str = os.getenv(
-        "DATABASE_URL",
-        "sqlite+aiosqlite:///./url_shortener.db"
-    )
+    # Database
+    DB_HOST: str = "localhost"
+    DB_PORT: int = 5432
+    DB_USER: str = "postgres"
+    DB_PASSWORD: str = "postgres"
+    DB_NAME: str = "url_shortener"
 
-    short_id_length: int = int(os.getenv("SHORT_ID_LENGTH", "6"))
-    base_url: str = os.getenv("BASE_URL", "http://localhost:8000")
+    # App
+    SHORT_ID_LENGTH: int = 6
+    BASE_URL: str = "http://localhost:8000"
+
+    @property
+    def database_url(self) -> str:
+        """Получение URL для подключения к БД"""
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
+    class Config:
+        env_file = ".env"
+        case_sensitive = False
 
 
 settings = Settings()

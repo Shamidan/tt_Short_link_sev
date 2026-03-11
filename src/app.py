@@ -42,12 +42,11 @@ APP.add_exception_handler(
 )
 
 
-# Запуск приложения (для разработки)
 if __name__ == "__main__":
     uvicorn.run(
-        "app:APP",  # строка для запуска модуля
+        "app:APP",
         host="0.0.0.0",
         port=8000,
-        reload=True,  # авто-перезагрузка при разработке
+        reload=True,
         log_level=settings.log_level.lower(),
     )

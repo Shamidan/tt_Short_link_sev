@@ -100,15 +100,12 @@ class LinksRoutable(Routable):
         Возвращает количество раз, когда по ссылке переходили.
         """
         try:
-            # Можно получить и другие данные, если нужно
             clicks = await service.get_clicks_count(short_id)
 
             return LinkStatsResponse(
                 short_id=short_id,
                 clicks=clicks,
-                # Если захотим добавить позже:
-                # original_url=link.original_url,
-                # created_at=link.created_at,
+
             )
         except LinkNotFoundError:
             return JSONResponse(

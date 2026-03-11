@@ -12,7 +12,6 @@ async def link_not_found_exception_handler(
     return JSONResponse(
         status_code=404,
         content={
-            "detail": str(exc),  
-            # "detail": "Link not found",
+            "detail": str(exc),
         },
     )
