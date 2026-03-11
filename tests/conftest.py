@@ -9,10 +9,15 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+import sys
+import os
 
-from tt_Short_link_sev.src.app import APP
-from tt_Short_link_sev.src.infrastructure.db.models import Base
-from tt_Short_link_sev.src.infrastructure.db.session_maker import get_session
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
+from src.app import APP
+from src.infrastructure.db.models import Base
+from src.infrastructure.db.session_maker import get_session
 
 
 # Используем in-memory SQLite для тестов
@@ -71,7 +76,7 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(
         transport=transport,
         base_url="http://test",
-        follow_redirects=False,  # Важно! Не следовать редиректам автоматически
+        follow_redirects=False,  
     ) as ac:
         yield ac
 

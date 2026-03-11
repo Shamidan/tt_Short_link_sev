@@ -35,10 +35,7 @@ class LinksRoutable(Routable):
     ) -> LinkResponse:
         """
         Создание короткой ссылки.
-
-        - **original_url**: длинная ссылка для сокращения (должна начинаться с http:// или https://)
-
-        Возвращает короткий идентификатор, который можно использовать как `/abc123`
+        Возвращает короткий идентификатор и оригинальный url
         """
         short_id = await service.create_short_link(str(payload.original_url))
 
@@ -64,9 +61,6 @@ class LinksRoutable(Routable):
     ) -> RedirectResponse:
         """
         Редирект на оригинальную ссылку.
-
-        - **short_id**: короткий идентификатор (например, abc123)
-
         При каждом вызове увеличивает счетчик переходов.
         """
         try:
@@ -80,11 +74,15 @@ class LinksRoutable(Routable):
             )
 
     @get("/stats/{short_id}", response_model=LinkStatsResponse)
+
     async def get_link_stats(
             self,
             short_id: str,
             service: LinkService = Depends(get_link_service),
     ) -> LinkStatsResponse:
+        """
+        Возвращает количество переходов, оригинальный url 
+        """
         try:
             link = await service.get_link_info(short_id)
             
@@ -92,7 +90,6 @@ class LinksRoutable(Routable):
                 short_id=link.short_id,
                 clicks=link.clicks,
                 original_url=link.original_url,
-                created_at=link.created_at
             )
         except LinkNotFoundError:
             return JSONResponse(

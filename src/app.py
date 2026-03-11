@@ -15,20 +15,15 @@ async def lifespan(app: FastAPI):
     Lifespan контекст для FastAPI.
     Создает таблицы при старте и закрывает соединения при остановке.
     """
-    # Код при старте
-    print("Инициализация БД...")
+
     engine = create_async_engine(settings.database_url)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     await engine.dispose()
-    print("Таблицы созданы!")
 
     yield
 
-    # Код при остановке
-    print("Завершение работы...")
 
-# Создаем приложение
 APP = FastAPI(
     docs_url="/docs",
     lifespan=lifespan

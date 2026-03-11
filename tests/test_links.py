@@ -1,9 +1,9 @@
 from tt_Short_link_sev.src.app import APP
-from tt_Short_link_sev.src.infrastructure.db.models import Base, Link
-from tt_Short_link_sev.src.infrastructure.db.session_maker import get_session
-from tt_Short_link_sev.src.core.services.link import LinkService
-from tt_Short_link_sev.src.core.exceptions.link import LinkNotFoundError
-from tt_Short_link_sev.src.core.services.short_id_generator import SimpleShortIdGenerator
+from src.infrastructure.db.models import Base, Link
+from src.infrastructure.db.session_maker import get_session
+from src.core.services.link import LinkService
+from src.core.exceptions.link import LinkNotFoundError
+from src.core.services.short_id_generator import SimpleShortIdGenerator
 
 import asyncio
 import pytest

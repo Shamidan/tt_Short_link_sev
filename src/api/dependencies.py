@@ -6,7 +6,6 @@ from src.core.services.short_id_generator import SimpleShortIdGenerator
 from src.infrastructure.db.session_maker import get_session
 
 
-# TODO SimpleShortIdGenerator поменять на нормальный
 def get_short_id_generator() -> SimpleShortIdGenerator:
     """
     Dependency для получения генератора коротких ID.

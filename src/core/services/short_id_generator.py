@@ -1,15 +1,9 @@
-
-
-class ShortIdGenerator:
-    pass
-
-
 import random
 import string
 
 
 class SimpleShortIdGenerator:
-    """Простой генератор для первого этапа (не для продакшена)"""
+    """Простой генератор"""
 
     def __init__(self, length: int = 6):
         self.length = length

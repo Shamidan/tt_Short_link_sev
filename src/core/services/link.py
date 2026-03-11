@@ -6,11 +6,9 @@ from src.core.services.base import BaseService
 from src.infrastructure.db.models import Link
 from src.infrastructure.db.repositories.link import LinkRepository
 from src.core.services.short_id_generator import SimpleShortIdGenerator
-# from src.core.services.short_id_generator import ShortIdGenerator
 from src.core.exceptions.link import LinkNotFoundError
 
 
-# TODO SimpleShortIdGenerator поменять на нормальный
 class LinkService(BaseService):
     """Сервис для работы с короткими ссылками"""
 
@@ -36,10 +34,8 @@ class LinkService(BaseService):
         """
         Создание короткой ссылки
         """
-        # Генерируем уникальный short_id
         short_id = await self._generate_unique_short_id()
 
-        # Создаем запись в БД
         await self.link_repo.create(short_id, original_url)
 
         return short_id
@@ -50,7 +46,6 @@ class LinkService(BaseService):
         """
         link = await self._get_link_or_fail(short_id)
 
-        # Атомарно увеличиваем счетчик
         updated_link = await self.link_repo.increment_clicks(short_id)
 
         return updated_link.original_url
@@ -68,7 +63,7 @@ class LinkService(BaseService):
 
     async def _generate_unique_short_id(self) -> str:
         """
-        Генерация уникального короткого идентификатора
+        Генерация уникального id
         """
         while True:
             short_id = self.id_generator.generate()
