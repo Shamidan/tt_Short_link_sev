@@ -1,28 +1,21 @@
-from pydantic import BaseSettings
+from pydantic import BaseModel
+import os
 
 
-class Settings(BaseSettings):
-    """Настройки приложения"""
-
+class Settings(BaseModel):
     # Database
-    DB_HOST: str = "localhost"
-    DB_PORT: int = 5432
-    DB_USER: str = "postgres"
-    DB_PASSWORD: str = "postgres"
-    DB_NAME: str = "url_shortener"
-
-    # App
-    SHORT_ID_LENGTH: int = 6
-    BASE_URL: str = "http://localhost:8000"
+    DB_HOST: str = os.getenv("DB_HOST", "db")
+    DB_PORT: int = int(os.getenv("DB_PORT", "5432"))
+    DB_USER: str = os.getenv("DB_USER", "postgres")
+    DB_PASSWORD: str = os.getenv("DB_PASSWORD", "postgres")
+    DB_NAME: str = os.getenv("DB_NAME", "url_shortener")
+    
+    SHORT_ID_LENGTH: int = int(os.getenv("SHORT_ID_LENGTH", "6"))
+    BASE_URL: str = os.getenv("BASE_URL", "http://localhost:8000")
 
     @property
     def database_url(self) -> str:
-        """Получение URL для подключения к БД"""
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
-
-    class Config:
-        env_file = ".env"
-        case_sensitive = False
 
 
 settings = Settings()

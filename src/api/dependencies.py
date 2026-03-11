@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from tt_Short_link_sev.src.core.services.link import LinkService
-from tt_Short_link_sev.src.core.services.short_id_generator import SimpleShortIdGenerator
-from tt_Short_link_sev.src.infrastructure.db.session_maker import get_session
+from src.core.services.link import LinkService
+from src.core.services.short_id_generator import SimpleShortIdGenerator
+from src.infrastructure.db.session_maker import get_session
 
 
 # TODO SimpleShortIdGenerator поменять на нормальный

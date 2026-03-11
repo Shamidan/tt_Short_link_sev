@@ -2,12 +2,12 @@ from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from tt_Short_link_sev.src.core.services.base import BaseService
-from tt_Short_link_sev.src.infrastructure.db.models import Link
-from tt_Short_link_sev.src.infrastructure.db.repositories.link import LinkRepository
-from tt_Short_link_sev.src.core.services.short_id_generator import SimpleShortIdGenerator
+from src.core.services.base import BaseService
+from src.infrastructure.db.models import Link
+from src.infrastructure.db.repositories.link import LinkRepository
+from src.core.services.short_id_generator import SimpleShortIdGenerator
 # from src.core.services.short_id_generator import ShortIdGenerator
-from tt_Short_link_sev.src.core.exceptions.link import LinkNotFoundError
+from src.core.exceptions.link import LinkNotFoundError
 
 
 # TODO SimpleShortIdGenerator поменять на нормальный
@@ -78,3 +78,8 @@ class LinkService(BaseService):
             if not existing:
                 return short_id
 
+    async def get_link_info(self, short_id: str) -> Link:
+        """
+        Получение полной информации о ссылке
+        """
+        return await self._get_link_or_fail(short_id)

@@ -3,8 +3,8 @@ from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 from typing import Optional
 
-from tt_Short_link_sev.src.infrastructure.db.models import Link
-from tt_Short_link_sev.src.infrastructure.db.repositories._base import AbstractRepository
+from src.infrastructure.db.models import Link
+from src.infrastructure.db.repositories._base import AbstractRepository
 
 
 class LinkRepository(AbstractRepository):
@@ -62,3 +62,4 @@ class LinkRepository(AbstractRepository):
             select(Link.clicks).where(Link.short_id == short_id)
         )
         return result.scalar_one_or_none()
+

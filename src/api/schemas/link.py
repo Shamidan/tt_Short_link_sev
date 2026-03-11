@@ -52,10 +52,7 @@ class LinkStatsResponse(BaseModel):
         default=None,
         examples=['https://example.com/url']
     )
-    created_at: Optional[datetime] = Field(
-        description='Дата создания ссылки',
-        default=None,
-    )
+
 
     class Config:
         from_attributes = True

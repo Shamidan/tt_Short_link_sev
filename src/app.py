@@ -1,12 +1,12 @@
 import uvicorn
 from fastapi import FastAPI
-from tt_Short_link_sev.src.api.routes.links import LinksRoutable
-from tt_Short_link_sev.src.api.exception_handlers.link import link_not_found_exception_handler
-from tt_Short_link_sev.src.core.exceptions.link import LinkNotFoundError
-from tt_Short_link_sev.src.infrastructure.config import settings
+from src.api.routes.links import LinksRoutable
+from src.api.exception_handlers.link import link_not_found_exception_handler
+from src.core.exceptions.link import LinkNotFoundError
+from src.infrastructure.config import settings
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import create_async_engine
-from tt_Short_link_sev.src.infrastructure.db.models import Base
+from src.infrastructure.db.models import Base
 
 
 @asynccontextmanager
@@ -30,7 +30,6 @@ async def lifespan(app: FastAPI):
 
 # Создаем приложение
 APP = FastAPI(
-    title=settings.app_name,
     docs_url="/docs",
     lifespan=lifespan
 )

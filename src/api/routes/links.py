@@ -2,14 +2,14 @@ from fastapi import Depends, status
 from classy_fastapi import Routable, get, post
 from fastapi.responses import RedirectResponse, JSONResponse
 
-from tt_Short_link_sev.src.api.schemas.link import (
+from src.api.schemas.link import (
     LinkCreateRequest,
     LinkResponse,
     LinkStatsResponse,
 )
-from tt_Short_link_sev.src.core.services.link import LinkService
-from tt_Short_link_sev.src.api.dependencies import get_link_service
-from tt_Short_link_sev.src.core.exceptions.link import LinkNotFoundError
+from src.core.services.link import LinkService
+from src.api.dependencies import get_link_service
+from src.core.exceptions.link import LinkNotFoundError
 
 
 class LinksRoutable(Routable):
@@ -71,6 +71,7 @@ class LinksRoutable(Routable):
         """
         try:
             original_url = await service.get_original_url_and_increment_clicks(short_id)
+
             return RedirectResponse(url=original_url)
         except LinkNotFoundError:
             return JSONResponse(
@@ -78,34 +79,20 @@ class LinksRoutable(Routable):
                 content={"detail": f"Link with id '{short_id}' not found"},
             )
 
-    @get(
-        "/stats/{short_id}",
-        response_model=LinkStatsResponse,
-        summary="Получить статистику по ссылке",
-        description="Возвращает количество переходов по короткой ссылке",
-        responses={
-            404: {"description": "Ссылка не найдена"},
-        },
-    )
+    @get("/stats/{short_id}", response_model=LinkStatsResponse)
     async def get_link_stats(
             self,
             short_id: str,
             service: LinkService = Depends(get_link_service),
     ) -> LinkStatsResponse:
-        """
-        Получение статистики переходов.
-
-        - **short_id**: короткий идентификатор (например, abc123)
-
-        Возвращает количество раз, когда по ссылке переходили.
-        """
         try:
-            clicks = await service.get_clicks_count(short_id)
-
+            link = await service.get_link_info(short_id)
+            
             return LinkStatsResponse(
-                short_id=short_id,
-                clicks=clicks,
-
+                short_id=link.short_id,
+                clicks=link.clicks,
+                original_url=link.original_url,
+                created_at=link.created_at
             )
         except LinkNotFoundError:
             return JSONResponse(
