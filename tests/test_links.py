@@ -102,6 +102,39 @@ async def test_unit_get_stats_raises_not_found():
     assert "nonexistent" in str(exc_info.value)
 
 
+@pytest.mark.asyncio
+async def test_unit_create_link_handles_collisions():
+    """
+    UNIT TEST #2: Проверка, что сервис генерирует уникальный short_id при коллизиях
+    Тестирует: LinkService.create_short_link
+    """
+    # Подготовка моков
+    mock_session = Mock(spec=AsyncSession)
+    mock_repo = AsyncMock()
+    mock_id_generator = Mock(spec=SimpleShortIdGenerator)
+    
+    mock_id_generator.generate.side_effect = ["abc123", "abc123", "xyz789"]
+    
+    mock_repo.get_by_short_id.side_effect = [
+        Mock(spec=Link),  
+        Mock(spec=Link), 
+        None,  
+    ]
+
+    service = LinkService(mock_session, mock_id_generator)
+    service.link_repo = mock_repo
+
+    short_id = await service.create_short_link("https://example.com")
+
+    assert short_id == "xyz789", "Должен быть выбран уникальный ID после коллизий"
+    
+    assert mock_id_generator.generate.call_count == 3
+    
+    assert mock_repo.get_by_short_id.call_count == 3
+    mock_repo.get_by_short_id.assert_any_call("abc123")
+    mock_repo.get_by_short_id.assert_any_call("xyz789")
+
+    mock_repo.create.assert_called_once_with("xyz789", "https://example.com")
 
 @pytest.mark.asyncio
 async def test_api_create_and_redirect(client: AsyncClient):

@@ -20,7 +20,7 @@ from src.infrastructure.db.models import Base
 from src.infrastructure.db.session_maker import get_session
 
 
-# Используем in-memory SQLite для тестов
+# Использую SQLite для тестов
 DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
 engine = create_async_engine(
@@ -76,7 +76,7 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     async with AsyncClient(
         transport=transport,
         base_url="http://test",
-        follow_redirects=False,  
+        follow_redirects=False, 
     ) as ac:
         yield ac
 
